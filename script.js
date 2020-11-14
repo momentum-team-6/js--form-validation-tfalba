@@ -10,11 +10,12 @@ const submitButton = document.querySelector('#submit-button')
 const carYear = document.querySelector('#car-year')
 const cvv = document.querySelector('#cvv')
 
-var term = "fs3"
-var re = new RegExp("^[0-9]{3}$")
+var reCvv = new RegExp("^[0-9]{3}$")
+var reDays = new RegExp("^[0-9]{1,2}$")
+var reCarYear = new RegExp("^[0-9]{4}$")
 
 cvv.addEventListener("input", function(event) {
-    if (re.test(cvv.value)===false) {
+    if (reCvv.test(cvv.value)===false) {
         cvv.setCustomValidity("3-digit code required")
     }
     else {
@@ -23,10 +24,18 @@ cvv.addEventListener("input", function(event) {
 })
 
 carYear.addEventListener("input", function (event) {
-    if (carYear.value<2000) {
-        carYear.setCustomValidity("Year must be greater than 2000")
+    if (carYear.value<1900 || reCarYear.test(carYear.value)===false) {
+        carYear.setCustomValidity("Year must be greater than 2000.")
     } else {
         carYear.setCustomValidity("")
+    }
+})
+
+days.addEventListener("input", function(event) {
+    if (reDays.test(days.value)===false || days.value>30) {
+        days.setCustomValidity("Must be between 1 and 30 days.")
+    } else {
+        days.setCustomValidity("")
     }
 })
 

@@ -29,7 +29,7 @@ Add the following validations:
 
 Add another validation: CVV must be a three-digit number. This can use the `pattern` attribute, or custom validation with JavaScript.
 
-### Step 4
+### Step 4           
 
 Add the ability to show the user the total cost of their parking when they click the "Make Reservation" button. The div with id "total" should be filled with text showing the cost. This should only occur if the form is valid.
 
