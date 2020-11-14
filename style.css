@@ -38,3 +38,9 @@
 .input-group input:last-child {
   margin-right: 0;
 }
+
+#car-year:invalid, #days:invalid, #cvv:invalid, #expiration:invalid,
+ #credit-card:invalid, #start-date:invalid, #name:invalid, #car-make:invalid, #car-model:invalid {
+  /* border: 2px dashed red; */
+  background: rgba(220, 221, 212, 0.61)
+}
