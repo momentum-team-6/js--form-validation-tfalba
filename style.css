@@ -44,3 +44,7 @@
   /* border: 2px dashed red; */
   background: rgba(220, 221, 212, 0.61)
 }
+
+.hideme {
+  display: none;
+}
