@@ -7,6 +7,7 @@ const daysField = document.querySelector('#days-field')
 const days = document.querySelector('#days')
 const make = document.querySelector('#car-make')
 const totalField = document.querySelector('#total')
+const newTotalField = document.querySelector('#new-total')
 const submitButton = document.querySelector('#submit-button')
 const carYear = document.querySelector('#car-year')
 const cvv = document.querySelector('#cvv')
@@ -115,49 +116,6 @@ function validateStartDate (date) {
 }
 
 startDate.addEventListener("input", function(event) {
-    let date= new Date(startDate.value+'T00:00')
-    
-    let newDate = new Date(date)
-    let currentDate = date.getDate()
-    let indexStart = date.getDay()
-    newDate.setDate(currentDate+days.value)
-    let indexNew = date.getDay()
-    console.log(date, "index of start day: " +indexStart)
-    console.log(newDate, "index of end day: " +indexNew)
-
-
-    //currentDate=date.getDay()
-//base the loop on the above... once get day index for the start day, can push sequence in seven and repeat for up to
-//days value 
-
-//set an outer loop with a daysCounter running down from the total number of days to zero.
-// if (current day is Sunday, value is zero >> push zero to the array
-let daysCounter=days.value
-currentDate=date.getDay()
-while (daysCounter>0) {
-    for (i=currentDate; i<=6 && daysCounter>0; i++) {
-        daysArray.push(i)
-        daysCounter=daysCounter-1
-    }
-    currentDate=0
-}
-
-
-
-
-    let daysArray=[indexNew]
-    for (i=1; i<=days.value; i++) {
-        newDate.setDate(currentDate+1)
-        indexNew= newDate.getDay()
-        daysArray.push(indexNew)
-        console.log("index New: "+ indexNew)
-        console.log("new date: "+ newDate)
-        console.log("current date: " + currentDate)
-        console.log("index: " +i)
-    }
-    console.log(daysArray)
-
-    
     if (validateStartDate(startDate.value+'T00:00')===false) {
         startDate.setCustomValidity("Date must begin tomorrow or later.")
     } else {
@@ -165,21 +123,45 @@ while (daysCounter>0) {
     }
 })
 
-
-
-
-
-
-
 //This section handles the calculation of total cost for Step 4
 
 form.addEventListener('submit', function (event) {
     event.preventDefault()
     let total=days.value*5
     console.log(total)
-    totalField.classList.remove('hideme')
-    
-    totalField.innerHTML = "Total for all of your days is: $" + total
+    //set an outer loop with a daysCounter running down from the total number of days to zero.
+    // if (current day is Sunday, value is zero >> push zero to the array
+    //once go from original start day set currentDate to zero since will continue pushing to array
+    //from there.
+    let date= new Date(startDate.value+'T00:00')
+    let daysArray=[]
+    let daysCounter=days.value
+    currentDate=date.getDay()
+    while (daysCounter>0) {
+        for (i=currentDate; i<=6 && daysCounter>0; i++) {
+            daysArray.push(i)
+            daysCounter=daysCounter-1
+        }
+        currentDate=0
+    }
+    //set up a counting look that counts cheap & pricey days depending on value in index
+    //loop over daysArray
+    let cheapDays=0
+    let priceyDays=0
+    for (i=0; i<days.value; i++) {
+        if (daysArray[i]===0 || daysArray[i]===6) {
+            priceyDays= priceyDays+1
+        }
+        else {
+            cheapDays=cheapDays+1
+        }
+    }
+    let totalCost=cheapDays*5+priceyDays*7
+    console.log(totalCost)
+    totalField.classList.remove('hideme') 
+    newTotalField.classList.remove('hideme')
+    totalField.innerHTML = "Total for all of your days is: $" + total 
+    newTotalField.innerHTML = "Total for all of your days with surge pricing is: $" + totalCost
   //   form.classList.add('hideme')  -- use this as a way to shift content of the page.
   //    could add a varname.classList.remove('hideme') to whatever was in background
   })
