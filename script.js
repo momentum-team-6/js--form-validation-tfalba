@@ -115,13 +115,23 @@ function validateStartDate (date) {
 }
 
 startDate.addEventListener("input", function(event) {
-    
+    let date= new Date(startDate.value+'T00:00')
+    let dayIndex = date.getDay()
+    console.log(date)
+    console.log(dayIndex)
     if (validateStartDate(startDate.value+'T00:00')===false) {
         startDate.setCustomValidity("Date must begin tomorrow or later.")
     } else {
         startDate.setCustomValidity("")
     }
 })
+
+
+let date= new Date(startDate.value+'T00:00')
+let dayIndex = date.getDay()
+console.log(dayIndex)
+
+
 
 
 //This section handles the calculation of total cost for Step 4
