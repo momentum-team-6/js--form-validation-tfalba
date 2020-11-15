@@ -66,17 +66,6 @@ expiration.addEventListener("input", function (event) {
     }
 })
 
-//This section handles the calculation of total cost for Step 4
-
-form.addEventListener('submit', function (event) {
-  event.preventDefault()
-  let total=days.value*5
-  console.log(total)
-  totalField.innerHTML = "Total for all of your days is: $" + total
-//   form.classList.add('hideme')  -- use this as a way to shift content of the page.
-//    could add a varname.classList.remove('hideme') to whatever was in background
-})
-
 
 // function validate () {
 //   // validate password match
@@ -134,5 +123,17 @@ startDate.addEventListener("input", function(event) {
     }
 })
 
-//for month/year in expiration create some sort of RegEx that requires
-// 01,02,03...,12 and 2 followed by 0-9 for year
+
+//This section handles the calculation of total cost for Step 4
+
+form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    let total=days.value*5
+    console.log(total)
+    totalField.classList.remove('hideme')
+    
+    totalField.innerHTML = "Total for all of your days is: $" + total
+  //   form.classList.add('hideme')  -- use this as a way to shift content of the page.
+  //    could add a varname.classList.remove('hideme') to whatever was in background
+  })
+  

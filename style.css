@@ -45,6 +45,12 @@
   background: rgba(220, 221, 212, 0.61)
 }
 
+#total {
+  border: 2px solid black;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 2em;
+}
+
 .hideme {
   display: none;
 }
