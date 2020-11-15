@@ -21,19 +21,13 @@ const expiration = document.querySelector('#expiration')
 //sets cvv to be a three digit value
 
 var reCvv = new RegExp("^[0-9]{3}$")
-// var reDays = new RegExp("^[0-9]{1,2}$")
-
 var reDays = new RegExp("^([1-9]|[12][0-9]|30)$")
 //Looked up above from following tutorial: 
 //https://www.regextutorial.org/regex-for-numbers-and-ranges.php
-
 var reCarYear = new RegExp("^(19[0-9][1-9]|200[0-9]|201[0-9]|202[01])$")
-//above setup will accept any number from 1901-2021
-
+//above setup will accept any number from 1901-2021 -- update this and make dynamic similar to ExpDate
 var reExpDate = new RegExp("^(0[1-9]/2[0-9]|1[1-2]/2[0-9])$")
-//Adjust back to have /2[1-9] in first section
-//above requires mm/yy format and only accepts if 11/20 or greater up to 12/29
-//**can come back and try to have this pull from current month and adjust */
+//above requires mm/yy format and only accepts if 01/20 or greater up to 12/29 -- current status handled later
 
 cvv.addEventListener("input", function(event) {
     if (reCvv.test(cvv.value)===false) {
@@ -43,7 +37,6 @@ cvv.addEventListener("input", function(event) {
         cvv.setCustomValidity("")
     }
 })
-
 carYear.addEventListener("input", function (event) {
     if (reCarYear.test(carYear.value)===false) {
         carYear.setCustomValidity("Year must be greater than 1900 and less than 2022.")
@@ -51,7 +44,6 @@ carYear.addEventListener("input", function (event) {
         carYear.setCustomValidity("")
     }
 })
-
 days.addEventListener("input", function(event) {
     if (reDays.test(days.value)===false) {
         days.setCustomValidity("Must be between 1 and 30 days.")
@@ -59,7 +51,6 @@ days.addEventListener("input", function(event) {
         days.setCustomValidity("")
     }
 })
-
 expiration.addEventListener("input", function (event) {
     if (reExpDate.test(expiration.value)===false) {
         expiration.setCustomValidity("Must be in the format MM/YY and in the future.")
@@ -71,9 +62,7 @@ expiration.addEventListener("input", function (event) {
     let parsedMonth=parseInt(newExpMonth)
     let newExpYear=(expiration.value).slice(3,5)
     let parsedYear=parseInt(newExpYear)+2000
-    // In order to run code below need to figure out exactly what getFullYear and getMonth produce and also
-    // parse the string to an integer and create parsedYear and parsedMonth from expiration.value
-    if ((today.getFullYear()<parsedYear)|| (today.getMonth()>(parsedMonth-1) && today.getFullYear()===parsedYear)){
+    if ((today.getFullYear()>parsedYear)|| (today.getMonth()>(parsedMonth-1) && today.getFullYear()===parsedYear)){
         expiration.setCustomValidity("Credit card is past expiration")
     }
     else {
@@ -81,16 +70,7 @@ expiration.addEventListener("input", function (event) {
     }
 })
 
-
-// function validate () {
-//   // validate password match
-//   // validate credit card number
-//   let creditCardNum = document.querySelector('#credit-card').value
-//   validateCardNumber(creditCardNum)
-// }
-
 //This section handles credit card validation for step 6
-
 function validateCardNumber (number) {
   var regex = new RegExp('^[0-9]{16}$')
   if (!regex.test(number)) return false
@@ -110,7 +90,7 @@ function luhnCheck (val) {
   }
   return sum % 10 == 0
 }
-
+//this section evaluates above credit card validation
 creditCardNum.addEventListener("input", function(event) {
     if (validateCardNumber(creditCardNum.value)===false) {
         creditCardNum.setCustomValidity("Please enter a valid credit card number.")
@@ -118,17 +98,12 @@ creditCardNum.addEventListener("input", function(event) {
         creditCardNum.setCustomValidity("")
     }
 })
-
-//use this as a start on solving step 5 & some of step 7
-
-
 //this section solves for start date being in the future
 function validateStartDate (date) {
     if (new Date(date)<= new Date()) {
         return false
     }
 }
-
 startDate.addEventListener("input", function(event) {
     if (validateStartDate(startDate.value+'T00:00')===false) {
         startDate.setCustomValidity("Date must begin tomorrow or later.")
@@ -138,7 +113,6 @@ startDate.addEventListener("input", function(event) {
 })
 
 //This section handles the calculation of total cost for Step 4
-
 form.addEventListener('submit', function (event) {
     event.preventDefault()
     let total=days.value*5
@@ -171,7 +145,6 @@ form.addEventListener('submit', function (event) {
         }
     }
     let totalCost=cheapDays*5+priceyDays*7
-    console.log(totalCost)
     totalField.classList.remove('hideme') 
     newTotalField.classList.remove('hideme')
     totalField.innerHTML = "Total for all of your days is: $" + total 
