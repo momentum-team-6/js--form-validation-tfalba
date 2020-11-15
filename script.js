@@ -12,6 +12,7 @@ const carYear = document.querySelector('#car-year')
 const cvv = document.querySelector('#cvv')
 const creditCardNum = document.querySelector('#credit-card')
 const startDate = document.querySelector('#start-date')
+const expiration = document.querySelector('#expiration')
 
 
 //set RegExp checks for car year >1900 (need to add that into RegExp)
@@ -27,6 +28,10 @@ var reDays = new RegExp("^([1-9]|[12][0-9]|30)$")
 
 var reCarYear = new RegExp("^(19[0-9][1-9]|200[0-9]|201[0-9]|202[01])$")
 //above setup will accept any number from 1901-2021
+
+var reExpDate = new RegExp("^(0[1-9]/2[1-9]|1[1-2]/2[0-9])$")
+//above requires mm/yy format and only accepts if 11/20 or greater up to 12/29
+//**can come back and try to have this pull from current month and adjust */
 
 cvv.addEventListener("input", function(event) {
     if (reCvv.test(cvv.value)===false) {
@@ -53,6 +58,13 @@ days.addEventListener("input", function(event) {
     }
 })
 
+expiration.addEventListener("input", function (event) {
+    if (reExpDate.test(expiration.value)===false) {
+        expiration.setCustomValidity("Must be in the format MM/YY and in the future.")
+    } else {
+        expiration.setCustomValidity("")
+    }
+})
 
 //This section handles the calculation of total cost for Step 4
 
@@ -96,7 +108,6 @@ function luhnCheck (val) {
 }
 
 creditCardNum.addEventListener("input", function(event) {
-    // validateCardNumber(creditCardNum.value)
     if (validateCardNumber(creditCardNum.value)===false) {
         creditCardNum.setCustomValidity("Please enter a valid credit card number.")
     } else {
@@ -106,8 +117,9 @@ creditCardNum.addEventListener("input", function(event) {
 
 //use this as a start on solving step 5 & some of step 7
 
+
+//this section solves for start date being in the future
 function validateStartDate (date) {
-    // let myDate= new Date(date)
     if (new Date(date)<= new Date()) {
         return false
     }
@@ -122,4 +134,5 @@ startDate.addEventListener("input", function(event) {
     }
 })
 
-
+//for month/year in expiration create some sort of RegEx that requires
+// 01,02,03...,12 and 2 followed by 0-9 for year
