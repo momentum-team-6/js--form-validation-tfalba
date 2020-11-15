@@ -77,8 +77,8 @@ If the credit card number is invalid, an error message should appear that looks 
 Add the following validations:
 
 * Expiration date must be a valid month and year and in the correct format.     COMPLETE
-* Expiration date must not be in the past.                                      PARTIALLY COMPLETE -- static for now
-* Car year cannot be in the future.                                             PARTIALLY COMPLETE -- static for now
+* Expiration date must not be in the past.                                      COMPLETE
+* Car year cannot be in the future.                                             PARTIALLY COMPLETE -- static for now -- repeat what did for exp date
 * Date parking must be in the future.                                           COMPLETE
 
 Each of these should also have client side validation errors.                   CURRENTLY USING COMBINED VALIDATION ERROR FOR mm//yy FORMAT and FUTURE EXP DATE

@@ -45,6 +45,12 @@
   background: rgba(220, 221, 212, 0.61)
 }
 
+#car-year:valid, #days:valid, #cvv:valid, #expiration:valid,
+ #credit-card:valid, #start-date:valid, #name:valid, #car-make:valid, #car-model:valid {
+   border: 2px solid black;
+   background-color: rgba(0, 128, 128, 0.438);
+ }
+
 #total, #new-total {
   border: 2px solid black;
   font-family: sans-serif;

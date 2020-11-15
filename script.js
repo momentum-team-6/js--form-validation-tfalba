@@ -30,7 +30,8 @@ var reDays = new RegExp("^([1-9]|[12][0-9]|30)$")
 var reCarYear = new RegExp("^(19[0-9][1-9]|200[0-9]|201[0-9]|202[01])$")
 //above setup will accept any number from 1901-2021
 
-var reExpDate = new RegExp("^(0[1-9]/2[1-9]|1[1-2]/2[0-9])$")
+var reExpDate = new RegExp("^(0[1-9]/2[0-9]|1[1-2]/2[0-9])$")
+//Adjust back to have /2[1-9] in first section
 //above requires mm/yy format and only accepts if 11/20 or greater up to 12/29
 //**can come back and try to have this pull from current month and adjust */
 
@@ -63,6 +64,19 @@ expiration.addEventListener("input", function (event) {
     if (reExpDate.test(expiration.value)===false) {
         expiration.setCustomValidity("Must be in the format MM/YY and in the future.")
     } else {
+        expiration.setCustomValidity("")
+    }
+    let today= new Date()
+    let newExpMonth=(expiration.value).slice(0,2)
+    let parsedMonth=parseInt(newExpMonth)
+    let newExpYear=(expiration.value).slice(3,5)
+    let parsedYear=parseInt(newExpYear)+2000
+    // In order to run code below need to figure out exactly what getFullYear and getMonth produce and also
+    // parse the string to an integer and create parsedYear and parsedMonth from expiration.value
+    if ((today.getFullYear()<parsedYear)|| (today.getMonth()>(parsedMonth-1) && today.getFullYear()===parsedYear)){
+        expiration.setCustomValidity("Credit card is past expiration")
+    }
+    else {
         expiration.setCustomValidity("")
     }
 })
