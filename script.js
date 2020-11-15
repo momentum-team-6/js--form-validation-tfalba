@@ -116,9 +116,48 @@ function validateStartDate (date) {
 
 startDate.addEventListener("input", function(event) {
     let date= new Date(startDate.value+'T00:00')
-    let dayIndex = date.getDay()
-    console.log(date)
-    console.log(dayIndex)
+    
+    let newDate = new Date(date)
+    let currentDate = date.getDate()
+    let indexStart = date.getDay()
+    newDate.setDate(currentDate+days.value)
+    let indexNew = date.getDay()
+    console.log(date, "index of start day: " +indexStart)
+    console.log(newDate, "index of end day: " +indexNew)
+
+
+    //currentDate=date.getDay()
+//base the loop on the above... once get day index for the start day, can push sequence in seven and repeat for up to
+//days value 
+
+//set an outer loop with a daysCounter running down from the total number of days to zero.
+// if (current day is Sunday, value is zero >> push zero to the array
+let daysCounter=days.value
+currentDate=date.getDay()
+while (daysCounter>0) {
+    for (i=currentDate; i<=6 && daysCounter>0; i++) {
+        daysArray.push(i)
+        daysCounter=daysCounter-1
+    }
+    currentDate=0
+}
+
+
+
+
+    let daysArray=[indexNew]
+    for (i=1; i<=days.value; i++) {
+        newDate.setDate(currentDate+1)
+        indexNew= newDate.getDay()
+        daysArray.push(indexNew)
+        console.log("index New: "+ indexNew)
+        console.log("new date: "+ newDate)
+        console.log("current date: " + currentDate)
+        console.log("index: " +i)
+    }
+    console.log(daysArray)
+
+    
     if (validateStartDate(startDate.value+'T00:00')===false) {
         startDate.setCustomValidity("Date must begin tomorrow or later.")
     } else {
@@ -127,9 +166,7 @@ startDate.addEventListener("input", function(event) {
 })
 
 
-let date= new Date(startDate.value+'T00:00')
-let dayIndex = date.getDay()
-console.log(dayIndex)
+
 
 
 
