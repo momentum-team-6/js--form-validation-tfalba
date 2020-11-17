@@ -1,6 +1,6 @@
-console.log('Add validation!')
-
-// Define all field elements as constants
+/* ------------------------------------------------------------------------------------------------------------------ */
+/*                                       Define all field elements as constants                                       */
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 const form = document.querySelector('#parking-form')
 const days = document.querySelector('#days')
@@ -12,27 +12,50 @@ const creditCardNum = document.querySelector('#credit-card')
 const startDate = document.querySelector('#start-date')
 const expiration = document.querySelector('#expiration')
 
+/* ------------------------------------ Defines RegExp for validation see ref below: ------------------------------------ */
+/* ------------------------- https://www.regextutorial.org/regex-for-numbers-and-ranges.php ------------------------- */
+
+// only accept a three digit value
+
 const reCvv = /^[0-9]{3}$/
+
+// only accepts a value between 1-30
+
 const reDays = /^([1-9]|[12][0-9]|30)$/
-// Looked up above from following tutorial:
-// https://www.regextutorial.org/regex-for-numbers-and-ranges.php
+
+// only accept any number from 1901-2021 - update this and make dynamic similar to ExpDate
+
 const reCarYear = /^(19[0-9][1-9]|200[0-9]|201[0-9]|202[01])$/
-// above setup will accept any number from 1901-2021 -- update this and make dynamic similar to ExpDate
+
+// requires mm/yy format and only accepts if 01/20 or greater up to 12/29 -- current date handled later
+
 const reExpDate = /^(0[1-9]\/2[0-9]|1[1-2]\/2[0-9])$/
-//  above requires mm/yy format and only accepts if 01/20 or greater up to 12/29 -- current status handled later
+
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/*                     Event listeners to test validation for cvv, car carYear, and number of days                    */
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------ */
+/*                               this section solves for start date being in the future                               */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+function validateStartDate (date) {
+  if (new Date(date) <= new Date()) {
+    return false
+  }
+}
 
 function val (field, message) {
   field.setCustomValidity(message)
 }
 
-cvv.addEventListener('input', function (event) {
+cvv. addEventListener('input', function (event) {
   if (reCvv.test(cvv.value) === false) {
-    val(cvv, '3-digit code required')
+    val(cvv, '3-digit code required.')
   } else {
     val(cvv, '')
   }
 })
-
 carYear.addEventListener('input', function (event) {
   if (reCarYear.test(carYear.value) === false) {
     val(carYear, 'Year must be greater than 1900 and not in the future.')
@@ -49,14 +72,6 @@ days.addEventListener('input', function (event) {
   }
 })
 
-// this section solves for start date being in the future
-// practice writing this as an arrow function
-function validateStartDate (date) {
-  if (new Date(date) <= new Date()) {
-    return false
-  }
-}
-
 startDate.addEventListener('input', function (event) {
   if (validateStartDate(startDate.value + 'T00:00') === false) {
     val(startDate, 'Date must begin tomorrow or later.')
@@ -64,6 +79,10 @@ startDate.addEventListener('input', function (event) {
     val(startDate, '')
   }
 })
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/*                                Validation of Credit card format and expiration date                                */
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 expiration.addEventListener('input', function (event) {
   const today = new Date()
@@ -80,7 +99,8 @@ expiration.addEventListener('input', function (event) {
   }
 })
 
-// This section handles credit card validation for step 6
+/* ----------------------------- This section handles credit card validation for step 6 ----------------------------- */
+
 function validateCardNumber (number) {
   let regex = /^[0-9]{16}$/
   if (!regex.test(number)) return false
@@ -100,7 +120,9 @@ function luhnCheck (val) {
   }
   return sum % 10 === 0
 }
-// this section evaluates above credit card validation
+
+/* ------------------------------- this section evaluates above credit card validation ------------------------------ */
+
 creditCardNum.addEventListener('input', function (event) {
   if (validateCardNumber(creditCardNum.value) === false) {
     val(creditCardNum, 'Please enter a valid credit card number.')
@@ -109,16 +131,15 @@ creditCardNum.addEventListener('input', function (event) {
   }
 })
 
-// This section handles the calculation of total cost for Step 4
+/* ------------------------------------------------------------------------------------------------------------------ */
+/*                            This section handles the calculation of total cost for Step 4                           */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
 form.addEventListener('submit', function (event) {
   event.preventDefault()
 
   const total = days.value * 5
   console.log(total)
-  // set an outer loop with a daysCounter running down from the total number of days to zero.
-  // if (current day is Sunday, value is zero >> push zero to the array
-  // once go from original start day set currentDate to zero since will continue pushing to array
-  // from there.
 
   let day = new Date(startDate.value + 'T00:00')
   const daysArray = [day.getDay()]
@@ -127,11 +148,9 @@ form.addEventListener('submit', function (event) {
     daysArray.push(day.getDay())
   }
 
-  // set up a counting look that counts cheap & pricey days depending on value in index
-  // loop over daysArray
+  /* ------------------------------ Step 5: write a .map() that will assign a value of 5 to a new ----------------------------- */
+  /* ------------------------- array if the value is not 0 or 6 and assigns 7 if it is 0 or 6 ------------------------- */
 
-  // write a .map() that will assign a value of 5 to a new
-  // array if the value is not 0 or 6 and assigns 7 if it is 0 or 6
   const finalArray = daysArray.map(function (day) {
     if (day < 1 || day > 5) {
       return 7
@@ -139,7 +158,10 @@ form.addEventListener('submit', function (event) {
       return 5
     }
   })
+
   // add code here to use .reduce() to total the array finalArray instead of below code
+
+  /* --------------- Loop counts cheap & pricey days depending on value in index -- loop over daysArray --------------- */
 
   let cheapDays = 0
   let priceyDays = 0
@@ -156,5 +178,6 @@ form.addEventListener('submit', function (event) {
   totalField.innerHTML = 'Total for all of your days is: $' + total
   newTotalField.innerHTML = 'Total for all of your days with surge pricing is: $' + totalCost
 })
-//   form.classList.add('hideme')  -- use this as a way to shift content of the page.
-//    could add a varname.classList.remove('hideme') to whatever was in background
+
+/* ---------------- form.classList.add('hideme')  -- use this as a way to shift content of the page. ---------------- */
+/* ------------------ could add a varname.classList.remove('hideme') to whatever was in background ------------------ */
