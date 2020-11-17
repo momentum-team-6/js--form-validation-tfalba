@@ -2,11 +2,6 @@ console.log('Add validation!')
 
 // Define all field elements as constants
 
-// function define (field,id) {
-//     const field = document.querySelector(id)
-// }
-// define(form, "#parking-form")
-
 const form = document.querySelector('#parking-form')
 const days = document.querySelector('#days')
 const totalField = document.querySelector('#total')
@@ -18,63 +13,55 @@ const startDate = document.querySelector('#start-date')
 const expiration = document.querySelector('#expiration')
 
 const reCvv = /^[0-9]{3}$/
-
 const reDays = /^([1-9]|[12][0-9]|30)$/
-
 // Looked up above from following tutorial:
 // https://www.regextutorial.org/regex-for-numbers-and-ranges.php
 const reCarYear = /^(19[0-9][1-9]|200[0-9]|201[0-9]|202[01])$/
 // above setup will accept any number from 1901-2021 -- update this and make dynamic similar to ExpDate
-
 const reExpDate = /^(0[1-9]\/2[0-9]|1[1-2]\/2[0-9])$/
-
 //  above requires mm/yy format and only accepts if 01/20 or greater up to 12/29 -- current status handled later
+
+function val (field, message) {
+  field.setCustomValidity(message)
+}
 
 cvv.addEventListener('input', function (event) {
   if (reCvv.test(cvv.value) === false) {
-    cvv.setCustomValidity('3-digit code required')
+    val(cvv, '3-digit code required')
   } else {
-    cvv.setCustomValidity('')
+    val(cvv, '')
   }
 })
 
 carYear.addEventListener('input', function (event) {
   if (reCarYear.test(carYear.value) === false) {
-    carYear.setCustomValidity('Year must be greater than 1900 and not in future')
+    val(carYear, 'Year must be greater than 1900 and not in the future.')
   } else {
-    carYear.setCustomValidity('')
+    val(carYear, '')
   }
 })
 
 days.addEventListener('input', function (event) {
   if (reDays.test(days.value) === false) {
-    days.setCustomValidity('Must be between 1 and 30 days.')
+    val(days, 'Must be between 1 and 30 days.')
   } else {
-    days.setCustomValidity('')
+    val(days, '')
   }
 })
 
-expiration.addEventListener('input', function (event) {
-  if (reExpDate.test(expiration.value) === false) {
-    expiration.setCustomValidity('Must be in the format MM/YY.')
-  } else {
-    expiration.setCustomValidity('')
-  }
-})
-
+// this section solves for start date being in the future
+// practice writing this as an arrow function
 function validateStartDate (date) {
   if (new Date(date) <= new Date()) {
     return false
   }
 }
 
-// this section solves for start date being in the future
-
 startDate.addEventListener('input', function (event) {
   if (validateStartDate(startDate.value + 'T00:00') === false) {
-    startDate.setCustomValidity('Date must begin tomorrow or later.')
+    val(startDate, 'Date must begin tomorrow or later.')
   } else {
-    startDate.setCustomValidity('')
+    val(startDate, '')
   }
 })
 
@@ -84,10 +71,12 @@ expiration.addEventListener('input', function (event) {
   const parsedMonth = parseInt(newExpMonth)
   const newExpYear = (expiration.value).slice(3, 5)
   const parsedYear = parseInt(newExpYear) + 2000
-  if ((today.getFullYear() > parsedYear) || (today.getMonth() > (parsedMonth - 1) && today.getFullYear() === parsedYear)) {
-    expiration.setCustomValidity('Credit card is past expiration')
+  if (reExpDate.test(expiration.value) === false) {
+    val(expiration, 'Must be in the format MM/YY.')
+  } else if ((today.getFullYear() > parsedYear) || (today.getMonth() > (parsedMonth - 1) && today.getFullYear() === parsedYear)) {
+    val(expiration, 'Credit card is past expiration.')
   } else {
-    expiration.setCustomValidity('')
+    val(expiration, '')
   }
 })
 
@@ -114,9 +103,9 @@ function luhnCheck (val) {
 // this section evaluates above credit card validation
 creditCardNum.addEventListener('input', function (event) {
   if (validateCardNumber(creditCardNum.value) === false) {
-    creditCardNum.setCustomValidity('Please enter a valid credit card number.')
+    val(creditCardNum, 'Please enter a valid credit card number.')
   } else {
-    creditCardNum.setCustomValidity('')
+    val(creditCardNum, '')
   }
 })
 
@@ -162,9 +151,9 @@ form.addEventListener('submit', function (event) {
     }
   }
   const totalCost = cheapDays * 5 + priceyDays * 7
-  totalField.classList.remove('hideme') 
+  totalField.classList.remove('hideme')
   newTotalField.classList.remove('hideme')
-  totalField.innerHTML = 'Total for all of your days is: $' + total 
+  totalField.innerHTML = 'Total for all of your days is: $' + total
   newTotalField.innerHTML = 'Total for all of your days with surge pricing is: $' + totalCost
 })
 //   form.classList.add('hideme')  -- use this as a way to shift content of the page.
